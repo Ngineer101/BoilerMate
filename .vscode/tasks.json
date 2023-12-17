@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "docker-build",
+      "label": "docker-build: debug",
+      "dependsOn": [
+        "build"
+      ],
+      "dockerBuild": {
+        "tag": "boilermate:dev",
+        "target": "base",
+        "dockerfile": "${workspaceFolder}/BoilerMate.Api/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/BoilerMate.Api/BoilerMate.Api.csproj"
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build: release",
+      "dependsOn": [
+        "build"
+      ],
+      "dockerBuild": {
+        "tag": "boilermate:latest",
+        "dockerfile": "${workspaceFolder}/BoilerMate.Api/Dockerfile",
+        "context": "${workspaceFolder}",
+        "platform": {
+          "os": "linux",
+          "architecture": "amd64"
+        },
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/BoilerMate.Api/BoilerMate.Api.csproj"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: debug",
+      "dependsOn": [
+        "docker-build: debug"
+      ],
+      "dockerRun": {},
+      "netCore": {
+        "appProject": "${workspaceFolder}/BoilerMate.Api/BoilerMate.Api.csproj",
+        "enableDebugging": true
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: release",
+      "dependsOn": [
+        "docker-build: release"
+      ],
+      "dockerRun": {},
+      "netCore": {
+        "appProject": "${workspaceFolder}/BoilerMate.Api/BoilerMate.Api.csproj"
+      }
+    }
+  ]
+}
